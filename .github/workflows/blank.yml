@@ -1,0 +1,22 @@
+name: Get-AMD64-Docker-Images-Release
+
+on:
+  workflow_dispatch: # 手动触发，方便调试
+
+jobs:
+  pull_and_package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. 清理运行器磁盘空间（关键步骤）
+        run: |
+          # 释放系统自带的冗余文件
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/.ghcup
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          # 清理 Docker 缓存
+          docker system prune -a -f
+          # 显示剩余空间，方便调试
+          df -h
